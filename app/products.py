@@ -10,9 +10,11 @@ Falls back to a cached fixture when no SerpApi key is set, so the whole flow
 still demos offline.
 """
 import json
+import os
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 import requests
 
@@ -21,23 +23,35 @@ from . import config
 ENDPOINT = "https://serpapi.com/search.json"
 CACHE_PATH = config.FIXTURES / "products.json"
 
+# Vercel's deployment filesystem is read-only outside /tmp, so writes there
+# would raise. Locally this is the same path as CACHE_PATH, so behavior is
+# unchanged for local dev; on Vercel, reads still fall back to the bundled
+# seed file below when /tmp is empty (a fresh cold start), only writes are
+# redirected. /tmp is per-instance and ephemeral - fine, this is a
+# performance cache, never the only path to a result (see search() below).
+_WRITE_PATH = Path("/tmp/products.json") if os.environ.get("VERCEL") else CACHE_PATH
+
 # Cheap in-process cache. A demo re-runs the same few queries constantly and
 # the free SerpApi tier is 100 searches/month.
 _MEM: dict = {}
 
 
 def _cache() -> dict:
-    if not CACHE_PATH.exists():
-        return {}
-    try:
-        return json.loads(CACHE_PATH.read_text("utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return {}
+    for p in (_WRITE_PATH, CACHE_PATH):
+        if p.exists():
+            try:
+                return json.loads(p.read_text("utf-8"))
+            except (json.JSONDecodeError, OSError):
+                continue
+    return {}
 
 
 def _save_cache(data: dict) -> None:
-    CACHE_PATH.parent.mkdir(exist_ok=True)
-    CACHE_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    try:
+        _WRITE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _WRITE_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    except OSError:
+        pass  # best-effort cache; a write failure must never break a live lookup
 
 
 def _clean_price(item: dict):

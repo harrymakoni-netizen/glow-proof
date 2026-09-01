@@ -7,3 +7,6 @@ logs-uvicorn.txt
 # Pulled Xano backend - its own separate git repo (xano-workspace/.git),
 # not part of this app's source. See README.md "Xano - what it's actually for".
 xano-workspace/
+
+.vercel
+.env*
