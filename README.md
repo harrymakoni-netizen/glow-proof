@@ -7,6 +7,11 @@ buy — from anywhere on the open market.
 Built for the DevNetwork [API + Cloud + AI] Hackathon 2026, deadline
 **Sep 3, 2026 @ 10:00 AM PT** ([VERIFIED.md](VERIFIED.md)).
 
+**Live:** [glow-proof.vercel.app](https://glow-proof.vercel.app) — deployed
+in fixture mode (forced regardless of local `.env`, since this URL is public
+and shouldn't let a random visitor spend real Perfect Corp credit). Source:
+[github.com/harrymakoni-netizen/glow-proof](https://github.com/harrymakoni-netizen/glow-proof).
+
 ## The position
 
 Every brand's skin quiz maps your results onto that brand's own shelf. That
