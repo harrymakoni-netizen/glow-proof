@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#160910">
+<title>GlowProof — measured skincare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wordmark">glow<b>proof</b></div>
+  <div class="status mono" id="status"><span class="led"></span><span id="status-text">connecting</span></div>
+</header>
+
+<!-- ══ 1. LANDING ══ -->
+<section class="view on" id="v-landing">
+  <div class="landing">
+    <div>
+      <div class="mono kicker">Skin analysis · 633&thinsp;nm protocol</div>
+      <h1 class="display">Stop <i>guessing</i> your skincare.</h1>
+      <p class="lede">
+        A five-question quiz asks you to rate your own skin, then sells you the
+        answer. GlowProof measures instead — then goes looking for what actually
+        fits, wherever it happens to be sold.
+      </p>
+
+      <div class="cta-row">
+        <button class="btn" id="go-camera">Scan my skin</button>
+        <button class="btn ghost" id="go-upload">Upload a photo</button>
+        <input type="file" id="file" accept="image/jpeg,image/png" hidden>
+      </div>
+
+      <ul class="claims">
+        <li><span class="n">01</span><span>One photo, measured across every concern the model reads. Analysed, then discarded — we keep the scores, never your face.</span></li>
+        <li><span class="n">02</span><span>We sell nothing. No catalogue to steer you toward, no house brand to defend.</span></li>
+        <li><span class="n">03</span><span>Cosmetic guidance, not a diagnosis. If something is changing or painful, see a clinician.</span></li>
+      </ul>
+
+      <div class="recent" id="recent" hidden>
+        <div class="mono kicker">Recent scans</div>
+        <div class="recent-list" id="recent-list"></div>
+      </div>
+    </div>
+
+    <div class="bloom" aria-hidden="true">
+      <div class="readout">
+        <b class="display">633</b>
+        <span class="mono">nanometres · visible red</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. CAPTURE ══ -->
+<section class="view" id="v-capture">
+  <div class="capture">
+    <div class="capture-inner">
+      <div>
+        <div class="stage">
+          <video id="video" playsinline muted autoplay></video>
+          <div class="reticle">
+            <svg viewBox="0 0 200 260" aria-hidden="true"><ellipse cx="100" cy="130" rx="78" ry="112"/></svg>
+          </div>
+        </div>
+        <div class="cta-row">
+          <button class="btn" id="shoot">Capture</button>
+          <button class="btn ghost" id="cancel-camera">Back</button>
+        </div>
+        <div class="err" id="cam-err" hidden></div>
+      </div>
+
+      <div class="tips">
+        <div class="mono kicker">Before you shoot</div>
+        <h2>Four things that change the reading.</h2>
+        <ol>
+          <li><span class="n">01</span><span>Face a window or a soft lamp. Overhead light throws shadows the model reads as texture.</span></li>
+          <li><span class="n">02</span><span>Fill the oval. The face wants to be most of the frame.</span></li>
+          <li><span class="n">03</span><span>Glasses off, hair back, neutral expression. A smile creases the areas being measured.</span></li>
+          <li><span class="n">04</span><span>Bare skin if you can. Makeup is measured as skin.</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3. WORKING ══ -->
+<section class="view" id="v-working">
+  <div class="working">
+    <div class="working-inner">
+      <div class="scanwrap">
+        <div class="stage">
+          <img id="preview-working" alt="">
+          <div class="scanline"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="mono kicker">Analysing</div>
+        <div class="clock mono" id="clock">0.0<span style="font-size:1rem">s</span></div>
+        <div class="stages" id="stages">
+          <div class="stage-row" data-k="upload"><span class="dot"></span><span>Uploading over TLS</span><span class="nm">01</span></div>
+          <div class="stage-row" data-k="detect"><span class="dot"></span><span>Locating facial landmarks</span><span class="nm">02</span></div>
+          <div class="stage-row" data-k="measure"><span class="dot"></span><span>Measuring each concern region</span><span class="nm">03</span></div>
+          <div class="stage-row" data-k="score"><span class="dot"></span><span>Scoring against the reference set</span><span class="nm">04</span></div>
+        </div>
+        <p class="hint">Your photo is sent for analysis and is not stored by us.</p>
+        <div class="err" id="work-err" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4–6. RESULTS / CONSULTATION / ROUTINE ══ -->
+<section class="view" id="v-results">
+
+  <div class="results">
+    <div class="split" id="split">
+      <div class="face-col">
+        <div class="face-stage">
+          <img class="base" id="face-img" alt="Your photo, with the measured region highlighted">
+          <div class="tint" id="tint"></div>
+          <div class="mask" id="mask">
+            <img class="soft" id="mask-soft" alt="">
+            <img class="sharp" id="mask-sharp" alt="">
+          </div>
+        </div>
+        <div class="dots" id="dots" role="tablist" aria-label="Concern overlays"></div>
+      </div>
+
+      <div class="data-col">
+        <div class="mono kicker">Your baseline</div>
+        <div class="overall">
+          <div class="big display" id="overall">—</div>
+          <div class="meta">
+            <div class="mono" style="color:var(--lit-faint)">overall</div>
+            <div class="age display" id="skin-age">—</div>
+            <div id="overall-note" class="mono" style="font-size:.6rem;color:var(--lit-faint)"></div>
+          </div>
+        </div>
+        <div class="concerns" id="concerns"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="band-head">
+      <div class="mono kicker">The consultation</div>
+      <h2 id="greeting">Reading your results…</h2>
+    </div>
+    <div class="priorities" id="priorities">
+      <div class="prio"><div class="shimmer" style="width:40%"></div><div class="shimmer"></div><div class="shimmer" style="width:80%"></div></div>
+      <div class="prio"><div class="shimmer" style="width:40%"></div><div class="shimmer"></div><div class="shimmer" style="width:70%"></div></div>
+      <div class="prio"><div class="shimmer" style="width:40%"></div><div class="shimmer"></div><div class="shimmer" style="width:85%"></div></div>
+    </div>
+  </div>
+
+  <div class="band" style="padding-top:0">
+    <div class="band-head">
+      <div class="mono kicker">Your routine</div>
+      <h2>Two short routines and a light protocol.</h2>
+    </div>
+    <div class="routine-grid">
+      <div class="col"><span class="mono">Morning</span><div id="am"><div class="shimmer"></div><div class="shimmer" style="width:70%"></div></div></div>
+      <div class="col"><span class="mono">Evening</span><div id="pm"><div class="shimmer"></div><div class="shimmer" style="width:70%"></div></div></div>
+      <div class="col protocol" id="protocol"><span class="mono">Red light</span><div class="shimmer"></div></div>
+    </div>
+  </div>
+
+  <div class="flow-nav">
+    <button class="btn" id="go-report">See your report</button>
+    <button class="btn ghost" id="restart">Scan again</button>
+  </div>
+</section>
+
+<!-- ══ 7. REPORT ══ -->
+<section class="view" id="v-report">
+  <div class="report-view">
+    <div class="sheet" id="sheet">
+      <div class="mono">GlowProof · baseline report</div>
+      <h2>Skin baseline</h2>
+      <div class="sub" id="rep-date"></div>
+      <hr>
+      <div class="sheet-grid">
+        <div class="sheet-stat"><b id="rep-overall">—</b><span class="mono">overall score</span></div>
+        <div class="sheet-stat"><b id="rep-age">—</b><span class="mono">estimated skin age</span></div>
+        <div class="sheet-stat"><b id="rep-count">—</b><span class="mono">concerns measured</span></div>
+      </div>
+      <hr>
+      <div class="mono" style="margin-bottom:12px">Measurements</div>
+      <div id="rep-rows"></div>
+      <hr>
+      <div class="mono" style="margin-bottom:12px">Protocol</div>
+      <div id="rep-protocol"></div>
+      <p class="sub" style="margin-top:24px">
+        This is a cosmetic baseline, not a medical record. Re-scan in four to six
+        weeks and compare against these numbers rather than judging day to day.
+      </p>
+      <div class="sign">
+        <div><div class="line"></div><div class="mono" style="margin-top:8px">Signature</div></div>
+        <div style="width:180px"><div class="line"></div><div class="mono" style="margin-top:8px">Date</div></div>
+      </div>
+    </div>
+    <div class="report-actions">
+      <button class="btn dark" id="print">Save as PDF</button>
+      <button class="btn outline" id="back-results">Back to results</button>
+    </div>
+  </div>
+</section>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

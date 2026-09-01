@@ -1,0 +1,48 @@
+{
+  "_synthetic": true,
+  "_note": "Hand-built to match the documented response shape so UI work can proceed before the live API is verified. Replace with a real capture from scripts/preflight.py the moment one succeeds.",
+  "status": 200,
+  "data": {
+    "task_status": "success",
+    "results": {
+      "output": [
+        {
+          "type": "wrinkle",
+          "ui_score": 74,
+          "raw_score": 61.4,
+          "mask_urls": [
+            "synthetic://wrinkle"
+          ]
+        },
+        {
+          "type": "pore",
+          "ui_score": 58,
+          "raw_score": 47.2,
+          "mask_urls": [
+            "synthetic://pore"
+          ]
+        },
+        {
+          "type": "texture",
+          "ui_score": 68,
+          "raw_score": 57.33,
+          "mask_urls": [
+            "synthetic://texture"
+          ]
+        },
+        {
+          "type": "acne",
+          "ui_score": 81,
+          "raw_score": 72.9,
+          "mask_urls": [
+            "synthetic://acne"
+          ]
+        }
+      ],
+      "all": {
+        "score": 72
+      },
+      "skin_age": 29
+    }
+  }
+}
