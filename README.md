@@ -129,6 +129,15 @@ To point at a different workspace: `xano workspace pull -d ./xano-workspace
 instant they land, routine generates underneath. One endpoint would stack two
 slow calls behind one spinner.
 
+## Documentation
+
+- [demo-video-script.md](demo-video-script.md) — beat-by-beat 2:45 script + shot list
+- [sponsor-track-writeups.md](sponsor-track-writeups.md) — Perfect Corp + Xano submission text
+- [judges-quick-test.md](judges-quick-test.md) — 2-minute walkthrough for evaluators
+- [privacy-and-data-handling.md](privacy-and-data-handling.md) — what's stored, what isn't, why
+- [glowproof-technical-architecture.pdf](glowproof-technical-architecture.pdf) — system design, for judges
+- [VERIFIED.md](VERIFIED.md) — every claim above, checked against a real, dated API response
+
 ## Status
 
 Working: auth verified, all endpoints confirmed live, skin analysis
